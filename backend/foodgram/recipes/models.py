@@ -2,6 +2,28 @@ from django.db import models
 from users.models import User
 
 
+class Ingredient(models.Model):
+    name = models.CharField(
+        max_length=150,
+        verbose_name='Наименование'
+    )
+    measurement_unit = models.CharField(
+        max_length=25,
+        verbose_name='Единица измерения'
+    )
+
+
+class Tag(models.Model):
+    pass
+
+
+class RecipeIngredient(models.Model):
+    pass
+
+
+class RecipeTag(models.Model):
+    pass
+
 class Recipe(models.Model):
     author = models.ForeignKey(
         User,
