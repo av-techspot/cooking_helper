@@ -4,25 +4,32 @@ from users.models import User
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=150,
+        max_length=200,
         verbose_name='Наименование'
     )
     measurement_unit = models.CharField(
-        max_length=25,
+        max_length=200,
         verbose_name='Единица измерения'
     )
 
 
 class Tag(models.Model):
-    pass
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Тег'
+    )
+    color = models.CharField(
+        max_length=7,
+        null=True,
+        verbose_name='Цвет'
+    )
+    slug = models.SlugField(
+        max_length=200,
+        null=True,
+        unique=True,
+        verbose_name='Слаг'
+    )
 
-
-class RecipeIngredient(models.Model):
-    pass
-
-
-class RecipeTag(models.Model):
-    pass
 
 class Recipe(models.Model):
     author = models.ForeignKey(
@@ -48,4 +55,33 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления (мин)'
+    )
+
+
+class RecipeIngredient(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='ingredients'
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='recipes'
+    )
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество'
+    )
+
+
+class RecipeTag(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='tags'
+    )
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        related_name='recipes'
     )
