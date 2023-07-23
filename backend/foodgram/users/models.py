@@ -15,3 +15,15 @@ class User(AbstractUser):
     email = models.EmailField(('Email address'), unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="follower"
+    )
+    following = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="following"
+    )
+
+    class Meta:
+        unique_together = ("user", "following")
