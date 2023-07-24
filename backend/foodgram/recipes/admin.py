@@ -10,8 +10,11 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author')
+    list_display = ('name', 'author', 'favorites_number')
     list_filter = ('author', 'name', 'tag')
+
+    def favorites_number(self, obj):
+        return obj.favorites.count()
 
 
 @admin.register(Tag)
