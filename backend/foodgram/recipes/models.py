@@ -1,4 +1,4 @@
-from wsgiref.validate import validator
+from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import User
 
@@ -90,7 +90,7 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         validators=(
-            validator.MinValueValidator(1)
+            MinValueValidator(1),
         ),
         verbose_name='Время приготовления (мин)'
     )
@@ -103,13 +103,13 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients',
+        related_name='recipe_ingredient',
         verbose_name='Рецепт',
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='recipes',
+        related_name='recipe_ingredient',
         verbose_name='Ингредиент',
     )
     amount = models.PositiveSmallIntegerField(
