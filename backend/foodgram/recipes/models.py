@@ -13,7 +13,8 @@ class TagChoice(models.TextChoices):
 class Ingredient(models.Model):
     name = models.CharField(
         max_length=200,
-        verbose_name='Наименование'
+        verbose_name='Наименование',
+        db_index=True
     )
     measurement_unit = models.CharField(
         max_length=200,
@@ -42,6 +43,7 @@ class Tag(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name='Тег',
+        db_index=True
     )
     color = models.CharField(
         max_length=7,
@@ -69,7 +71,8 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         max_length=200,
-        verbose_name='Название'
+        verbose_name='Название',
+        db_index=True
     )
     image = models.ImageField(
         upload_to='media/',
@@ -91,7 +94,7 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         validators=(
-            MinValueValidator(1),
+            MinValueValidator(1, message='Минимальное время 1 мин'),
         ),
         verbose_name='Время приготовления (мин)'
     )
@@ -114,6 +117,9 @@ class RecipeIngredient(models.Model):
         verbose_name='Ингредиент',
     )
     amount = models.PositiveSmallIntegerField(
+        validators=(
+            MinValueValidator(1, message='Минимальное количество 1'),
+        ),
         verbose_name='Количество',
     )
 
