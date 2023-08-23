@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from drf_extra_fields.fields import Base64ImageField
 from .models import Ingredient, Recipe, Tag, RecipeIngredient, Cart, Favorite
-from users.serializers import FoodgramUserSerializer
+import users.api.serializers as us
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     tag = TagSerializer(read_only=True, many=True)
-    author = FoodgramUserSerializer(read_only=True)
+    author = us.FoodgramUserSerializer(read_only=True)
     ingredients = RecipeIngredientSerializer(
         many=True,
         read_only=True,
@@ -54,7 +54,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart', 'name', 'image', 'description',
             'cooking_time'
         )
-    
+
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
@@ -131,3 +131,12 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
+
+
+class ShortenedRecipeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+        read_only_fields = ('id', 'name', 'image', 'cooking_time')
