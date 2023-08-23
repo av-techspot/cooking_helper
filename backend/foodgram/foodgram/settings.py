@@ -105,6 +105,16 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
+    'SERIALIZERS': {
+        'user_create': 'users.api.serializers.FoodgramUserCreateSerializer',
+        'user': 'users.api.serializers.FoodgramUserSerializer',
+        'current_user': 'users.api.serializers.FoodgramUserSerializer',
+    },
+    'PERMISSIONS': {
+        'user': ('rest_framework.permissions.IsAuthenticated',),
+        'user_list': ('rest_framework.permissions.AllowAny',)
+    }
 }
 
 # Internationalization

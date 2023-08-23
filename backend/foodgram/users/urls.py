@@ -1,12 +1,12 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-import users.api.views
+import users.api.views as uv
 
 app_name = 'api'
 
 router = DefaultRouter()
-router.register('users', users.api.views.FoodgramUserViewSet)
+router.register('users', uv.FoodgramUserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

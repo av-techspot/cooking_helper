@@ -6,8 +6,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.pagination import LimitPageNumberPagination
 import users.api.serializers as us
+from recipes.pagination import LimitPageNumberPagination
 from users.models import Follow
 
 User = get_user_model()
@@ -23,11 +23,11 @@ class FoodgramUserViewSet(UserViewSet):
 
         if user == author:
             return Response({
-                'errors': 'Вы не можете подписываться на самого себя'
+                'errors': 'Невозможно подписаться на самого себя'
             }, status=status.HTTP_400_BAD_REQUEST)
         if Follow.objects.filter(user=user, author=author).exists():
             return Response({
-                'errors': 'Вы уже подписаны на данного пользователя'
+                'errors': 'Вы уже подписались на этого автора'
             }, status=status.HTTP_400_BAD_REQUEST)
 
         follow = Follow.objects.create(user=user, author=author)
@@ -42,7 +42,7 @@ class FoodgramUserViewSet(UserViewSet):
         author = get_object_or_404(User, id=id)
         if user == author:
             return Response({
-                'errors': 'Вы не можете отписываться от самого себя'
+                'errors': 'Невозможно отписаться от самого себя'
             }, status=status.HTTP_400_BAD_REQUEST)
         follow = Follow.objects.filter(user=user, author=author)
         if follow.exists():
