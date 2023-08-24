@@ -1,10 +1,18 @@
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Cart, Favorite, Ingredient, Recipe, RecipeIngredient, Tag
 
 
+class IngredientResource(resources.ModelResource):
+    class Meta:
+        model = Ingredient
+
+
 @admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
+class IngredientAdmin(ImportExportModelAdmin):
+    resource_class = IngredientResource
     list_display = ('name', 'measurement_unit',)
     list_filter = ('name',)
 
@@ -26,7 +34,6 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     pass
-
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):

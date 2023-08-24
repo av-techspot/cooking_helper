@@ -45,7 +45,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     tag = TagSerializer(read_only=True, many=True)
     author = us.FoodgramUserSerializer(read_only=True)
     ingredients = RecipeIngredientSerializer(
-        source='recipeingredient_set',
+        source='recipe_ingredient',
         many=True,
         read_only=True,
     )
@@ -117,7 +117,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.cooking_time = validated_data.get(
             'cooking_time', instance.cooking_time
         )
-        instance.tags.clear()
+        instance.tag.clear()
         tags_data = self.initial_data.get('tags')
         instance.tag.set(tags_data)
         RecipeIngredient.objects.filter(recipe=instance).all().delete()
