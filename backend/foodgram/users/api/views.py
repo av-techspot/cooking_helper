@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-import users.api.serializers as us
+from recipes.serializers import FollowSerializer
 from recipes.pagination import LimitPageNumberPagination
 from users.models import Follow
 
@@ -31,7 +31,7 @@ class FoodgramUserViewSet(UserViewSet):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         follow = Follow.objects.create(user=user, author=author)
-        serializer = us.FollowSerializer(
+        serializer = FollowSerializer(
             follow, context={'request': request}
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -58,7 +58,7 @@ class FoodgramUserViewSet(UserViewSet):
         user = request.user
         queryset = Follow.objects.filter(user=user)
         pages = self.paginate_queryset(queryset)
-        serializer = us.FollowSerializer(
+        serializer = FollowSerializer(
             pages,
             many=True,
             context={'request': request}

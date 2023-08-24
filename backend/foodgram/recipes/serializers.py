@@ -31,7 +31,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'name', 'measurement_unit')
+        fields = ('id', 'name', 'measurement_unit', 'amount')
         validators = [
             UniqueTogetherValidator(
                 queryset=RecipeIngredient.objects.all(),
@@ -45,6 +45,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     tag = TagSerializer(read_only=True, many=True)
     author = us.FoodgramUserSerializer(read_only=True)
     ingredients = RecipeIngredientSerializer(
+        source='recipeingredient_set',
         many=True,
         read_only=True,
     )
@@ -105,7 +106,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         tags_data = self.initial_data.get('tags')
-        recipe.tags.set(tags_data)
+        recipe.tag.set(tags_data)
         self.create_ingredients(ingredients_data, recipe)
         return recipe
 
@@ -118,7 +119,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
         instance.tags.clear()
         tags_data = self.initial_data.get('tags')
-        instance.tags.set(tags_data)
+        instance.tag.set(tags_data)
         RecipeIngredient.objects.filter(recipe=instance).all().delete()
         self.create_ingredients(validated_data.get('ingredients'), instance)
         instance.save()

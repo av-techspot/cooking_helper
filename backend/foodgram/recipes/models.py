@@ -24,6 +24,14 @@ class Ingredient(models.Model):
     def __str__(self):
         return f"{self.name} / {self.measurement_unit}"
 
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Ингредиент'
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'measurement_unit'],
+                                    name='unique ingredient')
+        ]
+
 
 class Tag(models.Model):
     BLUE = '#0000FF'
@@ -61,6 +69,11 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
 
 class Recipe(models.Model):
     author = models.ForeignKey(
@@ -85,6 +98,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
+        through_fields=('recipe', 'ingredient'),
         related_name='recipes'
     )
     tag = models.ManyToManyField(
@@ -128,18 +142,13 @@ class RecipeIngredient(models.Model):
         verbose_name='Количество',
     )
 
+    class Meta:
+        ordering = ['-id']
+        constraints = [
+            models.UniqueConstraint(fields=['ingredient', 'recipe'],
+                                    name='unique ingredients recipe')
+        ]
 
-# class RecipeTag(models.Model):
-#     recipe = models.ForeignKey(
-#         Recipe,
-#         on_delete=models.CASCADE,
-#         related_name='tags'
-#     )
-#     tag = models.ForeignKey(
-#         Tag,
-#         on_delete=models.CASCADE,
-#         related_name='recipes'
-#     )
 
 class Favorite(models.Model):
     user = models.ForeignKey(
@@ -155,9 +164,12 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        ordering = ['-id']
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные'
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'],
-                                    name='unique_user_favorite')
+                                    name='unique favorite recipe for user')
         ]
 
 
@@ -176,6 +188,8 @@ class Cart(models.Model):
     )
 
     class Meta:
+        ordering = ['-id']
+        verbose_name = 'Корзина'
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'],
                                     name='unique_cart_user')
