@@ -27,6 +27,7 @@ class Ingredient(models.Model):
     class Meta:
         ordering = ['-id']
         verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
         constraints = [
             models.UniqueConstraint(fields=['name', 'measurement_unit'],
                                     name='unique ingredient')
@@ -144,6 +145,8 @@ class RecipeIngredient(models.Model):
 
     class Meta:
         ordering = ['-id']
+        verbose_name = 'Ингредиенты в рецепте'
+        verbose_name_plural = 'Ингредиенты в рецептах'
         constraints = [
             models.UniqueConstraint(fields=['ingredient', 'recipe'],
                                     name='unique ingredients recipe')
@@ -190,6 +193,7 @@ class Cart(models.Model):
     class Meta:
         ordering = ['-id']
         verbose_name = 'Корзина'
+        verbose_name_plural = 'Покупки'
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'],
                                     name='unique_cart_user')
