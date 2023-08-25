@@ -26,4 +26,6 @@ class Follow(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         unique_together = ("user", "following")
