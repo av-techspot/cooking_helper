@@ -4,10 +4,9 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 import users.api.serializers as us
-
-from .models import (Cart, Favorite, Ingredient, Recipe,
-                     RecipeIngredient, Tag)
 from users.models import Follow
+
+from .models import Cart, Favorite, Ingredient, Recipe, RecipeIngredient, Tag
 
 
 class TagSerializer(serializers.ModelSerializer):
