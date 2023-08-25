@@ -35,6 +35,7 @@ class TagAdmin(admin.ModelAdmin):
 class RecipeIngredientAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     pass

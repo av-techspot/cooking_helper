@@ -91,7 +91,7 @@ class Recipe(models.Model):
         upload_to='recipes/',
         verbose_name='Изображение блюда'
     )
-    description = models.TextField(
+    text = models.TextField(
         max_length=255,
         verbose_name='Описание'
     )
