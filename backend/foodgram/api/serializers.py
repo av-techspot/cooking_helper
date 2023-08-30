@@ -32,12 +32,12 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'name', 'measurement_unit', 'amount')
-#        validators = [
-#            UniqueTogetherValidator(
-#                queryset=RecipeIngredient.objects.all(),
-#                fields=['ingredient', 'recipe']
-#            )
-#        ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=RecipeIngredient.objects.all(),
+                fields=['ingredient', 'recipe']
+            )
+        ]
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -92,8 +92,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredient_list.append(ingredient)
             if int(ingredient_item['amount']) <= LOW_INGREDIENT_LIMIT:
                 raise serializers.ValidationError({
-                    'ingredients': ('Убедитесь, что значение количества '
-                                    'ингредиента больше 0')
+                    'ingredients': (f'Убедитесь, что значение количества '
+                                    f'ингредиента больше '
+                                    f'{LOW_INGREDIENT_LIMIT}')
                 })
         return value
 
@@ -104,7 +105,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             })
         if int(value) <= LOW_COOKING_LIMIT:
             raise serializers.ValidationError({
-                'cooking_time': 'Время приготовления должно быть больше 0'
+                'cooking_time': f'Время приготовления должно '
+                                f' быть больше {LOW_COOKING_LIMIT}'
             })
         return value
 
