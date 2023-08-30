@@ -9,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
-from .models import Cart, Favorite, Ingredient, Recipe, RecipeIngredient, Tag
+from recipes.models import (Cart, Favorite, Ingredient,
+                            Recipe, RecipeIngredient, Tag)
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (IngredientSerializer, RecipeSerializer,
@@ -45,18 +46,14 @@ class RecipeViewset(viewsets.ModelViewSet):
     def favorite(self, request, pk=None):
         if request.method == 'POST':
             return self.add_obj(Favorite, request.user, pk)
-        if request.method == 'DELETE':
-            return self.delete_obj(Favorite, request.user, pk)
-        return None
+        return self.delete_obj(Favorite, request.user, pk)
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
             return self.add_obj(Cart, request.user, pk)
-        if request.method == 'DELETE':
-            return self.delete_obj(Cart, request.user, pk)
-        return None
+        return self.delete_obj(Cart, request.user, pk)
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
@@ -66,15 +63,14 @@ class RecipeViewset(viewsets.ModelViewSet):
             recipe__cart__user=request.user).values_list(
             'ingredient__name', 'ingredient__measurement_unit',
             'amount')
-        for item in ingredients:
-            name = item[0]
+        for name, unit, amount in ingredients:
             if name not in final_list:
                 final_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
+                    'measurement_unit': unit,
+                    'amount': amount
                 }
             else:
-                final_list[name]['amount'] += item[2]
+                final_list[name]['amount'] += amount
         pdfmetrics.registerFont(
             TTFont(
                 'nimbussanl', 'nimbussanl_boldcond.ttf', 'UTF-8'

@@ -3,6 +3,8 @@ from django.db import models
 
 from users.models import User
 
+MAX_LENGTH = 200
+
 
 class TagChoice(models.TextChoices):
     BREAKFAST = 'Завтрак'
@@ -12,12 +14,12 @@ class TagChoice(models.TextChoices):
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Наименование',
         db_index=True
     )
     measurement_unit = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Единица измерения'
     )
 
@@ -25,7 +27,7 @@ class Ingredient(models.Model):
         return f"{self.name} / {self.measurement_unit}"
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['name']
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
@@ -50,7 +52,7 @@ class Tag(models.Model):
     ]
 
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Тег',
         db_index=True
     )
@@ -61,7 +63,7 @@ class Tag(models.Model):
         verbose_name='Цвет'
     )
     slug = models.SlugField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         null=True,
         unique=True,
         verbose_name='Слаг'
@@ -84,7 +86,7 @@ class Recipe(models.Model):
         verbose_name='Автор',
     )
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Название',
         db_index=True
     )
