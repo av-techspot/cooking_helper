@@ -4,10 +4,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 import users.api.serializers as us
+from recipes.models import (Cart, Favorite, Ingredient, Recipe,
+                            RecipeIngredient, Tag)
 from users.models import Follow
-from .utils import LOW_INGREDIENT_LIMIT, LOW_COOKING_LIMIT
 
-from recipes.models import Cart, Favorite, Ingredient, Recipe, RecipeIngredient, Tag
+from .utils import LOW_COOKING_LIMIT, LOW_INGREDIENT_LIMIT
 
 
 class TagSerializer(serializers.ModelSerializer):

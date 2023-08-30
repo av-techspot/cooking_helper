@@ -8,9 +8,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from recipes.models import (Cart, Favorite, Ingredient, Recipe,
+                            RecipeIngredient, Tag)
+
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
-from recipes.models import (Cart, Favorite, Ingredient,
-                            Recipe, RecipeIngredient, Tag)
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (IngredientSerializer, RecipeSerializer,
