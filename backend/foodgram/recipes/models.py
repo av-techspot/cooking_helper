@@ -7,12 +7,14 @@ MAX_LENGTH = 200
 
 
 class TagChoice(models.TextChoices):
+    """Класс выбора тегов"""
     BREAKFAST = 'Завтрак'
     LUNCH = 'Обед'
     DINNER = 'Ужин'
 
 
 class Ingredient(models.Model):
+    """Модель ингредиента"""
     name = models.CharField(
         max_length=MAX_LENGTH,
         verbose_name='Наименование',
@@ -37,6 +39,7 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
+    """Модель тегов"""
     BLUE = '#0000FF'
     ORANGE = '#FFA500'
     GREEN = '#008000'
@@ -79,6 +82,7 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
+    """Модель рецепта"""
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -126,6 +130,7 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
+    """Связанная модель рецепта и ингредиента"""
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -156,6 +161,7 @@ class RecipeIngredient(models.Model):
 
 
 class Favorite(models.Model):
+    """Модель избранного"""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -179,6 +185,7 @@ class Favorite(models.Model):
 
 
 class Cart(models.Model):
+    """Модель списка покупок"""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

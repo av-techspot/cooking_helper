@@ -1,29 +1,42 @@
+# isort: skip_file
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 import users.api.serializers as us
-from recipes.models import (Cart, Favorite, Ingredient, Recipe,
-                            RecipeIngredient, Tag)
+from api.utils import (
+    LOW_COOKING_LIMIT,
+    LOW_INGREDIENT_LIMIT,
+    validate_low_limit
+)
+from recipes.models import (
+    Cart,
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    Tag
+)
 from users.models import Follow
-
-from .utils import LOW_COOKING_LIMIT, LOW_INGREDIENT_LIMIT
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """Сериализатор тегов"""
     class Meta:
         model = Tag
         fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор ингредиентов"""
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор связанной модели рецепт-ингредиент"""
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -42,6 +55,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор рецепта"""
     image = Base64ImageField()
     tag = TagSerializer(read_only=True, many=True)
     author = us.FoodgramUserSerializer(read_only=True)
@@ -91,8 +105,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Ингридиенты должны '
                                                   'быть уникальными')
             ingredient_list.append(ingredient)
-            if int(ingredient_item['amount']) <= LOW_INGREDIENT_LIMIT:
-                raise serializers.ValidationError({
+            validate_low_limit(int(ingredient_item['amount']), {
                     'ingredients': (f'Убедитесь, что значение количества '
                                     f'ингредиента больше '
                                     f'{LOW_INGREDIENT_LIMIT}')
@@ -104,8 +117,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'cooking_time': 'Время приготовления должно быть указано'
             })
-        if int(value) <= LOW_COOKING_LIMIT:
-            raise serializers.ValidationError({
+        validate_low_limit(int(value), {
                 'cooking_time': f'Время приготовления должно '
                                 f' быть больше {LOW_COOKING_LIMIT}'
             })
@@ -145,18 +157,21 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    """Сериализатор списка покупок"""
     class Meta:
         model = Cart
         fields = '__all__'
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    """Сериализатор избранного"""
     class Meta:
         model = Favorite
         fields = '__all__'
 
 
 class ShortenedRecipeSerializer(serializers.ModelSerializer):
+    """Сокращенный сериализатор рецепта"""
     image = Base64ImageField()
 
     class Meta:
@@ -166,6 +181,7 @@ class ShortenedRecipeSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    """Сериализатор подписок"""
     id = serializers.ReadOnlyField(source='author.id')
     email = serializers.ReadOnlyField(source='author.email')
     username = serializers.ReadOnlyField(source='author.username')

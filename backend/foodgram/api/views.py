@@ -1,3 +1,4 @@
+# isort: skip_file
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from reportlab.pdfbase import pdfmetrics
@@ -8,23 +9,35 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.models import (Cart, Favorite, Ingredient, Recipe,
-                            RecipeIngredient, Tag)
+from recipes.models import (
+    Cart,
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    Tag
+)
 
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
-from .serializers import (IngredientSerializer, RecipeSerializer,
-                          ShortenedRecipeSerializer, TagSerializer)
+from .serializers import (
+    IngredientSerializer,
+    RecipeSerializer,
+    ShortenedRecipeSerializer,
+    TagSerializer
+)
 
 
 class TagViewset(viewsets.ModelViewSet):
+    """Вьюсет тегов"""
     queryset = Tag.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = TagSerializer
 
 
 class IngredientViewset(viewsets.ModelViewSet):
+    """Вьюсет ингредиента"""
     permission_classes = (IsAdminOrReadOnly,)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -33,6 +46,7 @@ class IngredientViewset(viewsets.ModelViewSet):
 
 
 class RecipeViewset(viewsets.ModelViewSet):
+    """Вьюсет рецепта"""
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = LimitPageNumberPagination
