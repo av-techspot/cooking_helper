@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'import_export',
 
     # My apps
+    'api',
     'users',
     'recipes',
 ]

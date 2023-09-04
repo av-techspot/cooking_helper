@@ -1,4 +1,5 @@
 # isort: skip_file
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -54,8 +55,8 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         ]
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор рецепта"""
+class ReadRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор чтения рецепта"""
     image = Base64ImageField()
     tag = TagSerializer(read_only=True, many=True)
     author = us.FoodgramUserSerializer(read_only=True)
@@ -90,6 +91,28 @@ class RecipeSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
         return Recipe.objects.filter(cart__user=user, id=obj.id).exists()
+
+
+class CreateRecipeSerializer(ReadRecipeSerializer):
+    """Сериализатор создания рецепта"""
+    image = Base64ImageField()
+    tag = TagSerializer(read_only=True, many=True)
+    author = us.FoodgramUserSerializer(read_only=True)
+    ingredients = RecipeIngredientSerializer(
+        source='recipeingredient_set',
+        many=True,
+        read_only=True
+    )
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'tag', 'author', 'ingredients', 'is_favorited',
+            'is_in_shopping_cart', 'name', 'image', 'text',
+            'cooking_time'
+        )
 
     def validate_ingredients(self, value):
         ingredients = self.initial_data.get('ingredients')
@@ -131,6 +154,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 amount=ingredient.get('amount'),
             )
 
+    @transaction.atomic
     def create(self, validated_data):
         image = validated_data.pop('image')
         ingredients_data = self.initial_data.get('ingredients')
@@ -140,6 +164,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         self.create_ingredients(ingredients_data, recipe)
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance.image = validated_data.get('image', instance.image)
         instance.name = validated_data.get('name', instance.name)

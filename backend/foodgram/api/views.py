@@ -23,7 +23,7 @@ from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (
     IngredientSerializer,
-    RecipeSerializer,
+    CreateRecipeSerializer,
     ShortenedRecipeSerializer,
     TagSerializer
 )
@@ -48,7 +48,7 @@ class IngredientViewset(viewsets.ModelViewSet):
 class RecipeViewset(viewsets.ModelViewSet):
     """Вьюсет рецепта"""
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
+    serializer_class = CreateRecipeSerializer
     pagination_class = LimitPageNumberPagination
     filter_class = AuthorAndTagFilter
     permission_classes = [IsOwnerOrReadOnly]
