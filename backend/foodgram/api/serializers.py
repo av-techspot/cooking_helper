@@ -119,7 +119,8 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
         value = ingredients
         if not value:
             raise serializers.ValidationError({
-                'ingredients': 'Нужен хоть один ингридиент для рецепта'})
+                'ingredients': 'Нужен хоть один ингридиент для рецепта'
+            })
         ingredient_list = []
         for ingredient_item in value:
             ingredient = get_object_or_404(Ingredient,
@@ -132,7 +133,7 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
                     'ingredients': (f'Убедитесь, что значение количества '
                                     f'ингредиента больше '
                                     f'{LOW_INGREDIENT_LIMIT}')
-                })
+            })
         return value
 
     def validate_cooking_time(self, value):
@@ -143,7 +144,7 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
         validate_low_limit(int(value), {
                 'cooking_time': f'Время приготовления должно '
                                 f' быть больше {LOW_COOKING_LIMIT}'
-            })
+        })
         return value
 
     def create_ingredients(self, ingredients, recipe):
