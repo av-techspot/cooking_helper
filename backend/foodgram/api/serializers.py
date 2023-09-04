@@ -130,9 +130,9 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
                                                   'быть уникальными')
             ingredient_list.append(ingredient)
             validate_low_limit(int(ingredient_item['amount']), {
-                    'ingredients': (f'Убедитесь, что значение количества '
-                                    f'ингредиента больше '
-                                    f'{LOW_INGREDIENT_LIMIT}')
+                'ingredients': (f'Убедитесь, что значение количества '
+                                f'ингредиента больше '
+                                f'{LOW_INGREDIENT_LIMIT}')
             })
         return value
 
@@ -142,8 +142,8 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
                 'cooking_time': 'Время приготовления должно быть указано'
             })
         validate_low_limit(int(value), {
-                'cooking_time': f'Время приготовления должно '
-                                f' быть больше {LOW_COOKING_LIMIT}'
+            'cooking_time': f'Время приготовления должно '
+                            f' быть больше {LOW_COOKING_LIMIT}'
         })
         return value
 
