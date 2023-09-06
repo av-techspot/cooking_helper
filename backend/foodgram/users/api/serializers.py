@@ -6,7 +6,7 @@ from users.models import Follow, User
 
 
 class FoodgramUserCreateSerializer(UserCreateSerializer):
-    '''Сериализатор создания кастомного пользователя'''
+    """Сериализатор создания кастомного пользователя"""
     email = serializers.EmailField(
         validators=[
             UniqueValidator(queryset=User.objects.all())
@@ -32,7 +32,7 @@ class FoodgramUserCreateSerializer(UserCreateSerializer):
 
 
 class FoodgramUserSerializer(UserSerializer):
-    '''Сериализатор чтения кастомного пользователя'''
+    """Сериализатор чтения кастомного пользователя"""
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:

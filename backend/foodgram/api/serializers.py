@@ -6,10 +6,10 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 import users.api.serializers as us
-from api.utils import (
+from foodgram.utils import (
     LOW_COOKING_LIMIT,
     LOW_INGREDIENT_LIMIT,
-    validate_low_limit
+    is_greater_than_zero
 )
 from recipes.models import (
     Cart,
@@ -129,7 +129,7 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
                 raise serializers.ValidationError('Ингридиенты должны '
                                                   'быть уникальными')
             ingredient_list.append(ingredient)
-            validate_low_limit(int(ingredient_item['amount']), {
+            is_greater_than_zero(int(ingredient_item['amount']), {
                 'ingredients': (f'Убедитесь, что значение количества '
                                 f'ингредиента больше '
                                 f'{LOW_INGREDIENT_LIMIT}')
@@ -141,7 +141,7 @@ class CreateRecipeSerializer(ReadRecipeSerializer):
             raise serializers.ValidationError({
                 'cooking_time': 'Время приготовления должно быть указано'
             })
-        validate_low_limit(int(value), {
+        is_greater_than_zero(int(value), {
             'cooking_time': f'Время приготовления должно '
                             f' быть больше {LOW_COOKING_LIMIT}'
         })

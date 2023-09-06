@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    '''Модель кастомного пользователя'''
+    """Модель кастомного пользователя"""
     username = models.CharField(
         max_length=150,
         validators=[AbstractUser.username_validator],
@@ -19,7 +19,7 @@ class User(AbstractUser):
 
 
 class Follow(models.Model):
-    '''Модель подписки'''
+    """Модель подписки"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="follower"
     )

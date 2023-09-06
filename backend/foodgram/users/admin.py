@@ -5,11 +5,11 @@ from .models import Follow, User
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
-    '''Пользователь в панели администратора'''
+    """Пользователь в панели администратора"""
     list_filter = ('email', 'username',)
 
 
 @admin.register(Follow)
 class AdminFollow(admin.ModelAdmin):
-    '''Подписки в панели администратора'''
+    """Подписки в панели администратора"""
     pass

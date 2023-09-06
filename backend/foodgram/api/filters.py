@@ -8,12 +8,12 @@ User = get_user_model()
 
 
 class IngredientSearchFilter(SearchFilter):
-    '''Фильтрация поиска ингредиентов'''
+    """Фильтрация поиска ингредиентов"""
     search_param = 'name'
 
 
 class AuthorAndTagFilter(FilterSet):
-    '''Фильтр по автору и тегу'''
+    """Фильтр по автору и тегу"""
     tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
     author = filters.ModelChoiceFilter(queryset=User.objects.all())
     is_favorited = filters.BooleanFilter(method='filter_is_favorited')

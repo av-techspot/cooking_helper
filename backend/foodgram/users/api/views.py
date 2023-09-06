@@ -14,7 +14,7 @@ User = get_user_model()
 
 
 class FoodgramUserViewSet(UserViewSet):
-    '''Вьюсет кастомного пользователя'''
+    """Вьюсет кастомного пользователя"""
     pagination_class = LimitPageNumberPagination
 
     @action(detail=True, permission_classes=[IsAuthenticated])
