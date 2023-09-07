@@ -1,0 +1,8 @@
+[flake8]
+exclude=*/migrations/*
+per-file-ignores =
+    ./random_file.py:E501
+    ./settings/local.py:F405,F403
+    ./settings/prod.py:F405,F403,F401
+    ./settings/staging.py:F405,F403
+    ./accounts/apps.py:F40
