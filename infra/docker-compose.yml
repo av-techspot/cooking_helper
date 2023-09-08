@@ -14,14 +14,14 @@ services:
 
   backend:
     build:
-      context: ../backend
+      context: ../backend/foodgram
       dockerfile: Dockerfile
     env_file: .env
     depends_on:
       - db
     volumes:
-      - static:/backend_static
-      - media:/backend_media
+      - static:/app/static/
+      - media:/app/media/
       - ../data/:/app/data/
 
   frontend:
