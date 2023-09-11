@@ -192,7 +192,7 @@ class Favorite(models.Model):
     )
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['-user__id']
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
         constraints = [
