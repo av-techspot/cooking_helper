@@ -19,7 +19,7 @@ from recipes.models import (
     Tag
 )
 
-from .filters import AuthorAndTagFilter, IngredientSearchFilter
+from .filters import IngredientSearchFilter
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (
@@ -54,8 +54,32 @@ class RecipeViewset(viewsets.ModelViewSet):
     serializer_class = CreateRecipeSerializer
     pagination_class = LimitPageNumberPagination
     filter_backends = [DjangoFilterBackend]
-    filter_class = AuthorAndTagFilter
+#    filter_class = AuthorAndTagFilter
     permission_classes = [IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+        tags = self.request.query_params.getlist('tags')
+        user = self.request.user
+        author = self.request.query_params.get('author')
+        is_favorite = self.request.query_params.get('is_favorited')
+        is_in_shopping_cart = self.request.query_params.get(
+            'is_in_shopping_cart'
+        )
+
+        if author:
+            queryset = queryset.filter(author_id=author)
+
+        if tags:
+            queryset = queryset.filter(tags__slug__in=tags).distinct()
+
+        if is_favorite:
+            queryset = queryset.filter(favorites__user=user)
+
+        if is_in_shopping_cart:
+            queryset = Recipe.objects.filter(cart__user=user)
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
