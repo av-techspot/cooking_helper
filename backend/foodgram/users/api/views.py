@@ -1,3 +1,5 @@
+from api.pagination import LimitPageNumberPagination
+from api.serializers import FollowSerializer
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -5,9 +7,6 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-from api.pagination import LimitPageNumberPagination
-from backend.foodgram.api.serializers import FollowSerializer
 from users.models import Follow
 
 User = get_user_model()
@@ -17,7 +16,8 @@ class FoodgramUserViewSet(UserViewSet):
     """Вьюсет кастомного пользователя"""
     pagination_class = LimitPageNumberPagination
 
-    @action(detail=True, permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post'],
+            permission_classes=[IsAuthenticated])
     def subscribe(self, request, id=None):
         user = request.user
         author = get_object_or_404(User, id=id)
@@ -26,12 +26,12 @@ class FoodgramUserViewSet(UserViewSet):
             return Response({
                 'errors': 'Невозможно подписаться на самого себя'
             }, status=status.HTTP_400_BAD_REQUEST)
-        if Follow.objects.filter(user=user, author=author).exists():
+        if Follow.objects.filter(user=user, following=author).exists():
             return Response({
                 'errors': 'Вы уже подписались на этого автора'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        follow = Follow.objects.create(user=user, author=author)
+        follow = Follow.objects.create(user=user, following=author)
         serializer = FollowSerializer(
             follow, context={'request': request}
         )
@@ -45,7 +45,7 @@ class FoodgramUserViewSet(UserViewSet):
             return Response({
                 'errors': 'Невозможно отписаться от самого себя'
             }, status=status.HTTP_400_BAD_REQUEST)
-        follow = Follow.objects.filter(user=user, author=author)
+        follow = Follow.objects.filter(user=user, following=author)
         if follow.exists():
             follow.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)

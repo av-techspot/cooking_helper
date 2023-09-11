@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -17,6 +18,9 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def __str__(self):
+        return self.username
+
 
 class Follow(models.Model):
     """Модель подписки"""
@@ -31,3 +35,10 @@ class Follow(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         unique_together = ("user", "following")
+
+    def __str__(self):
+        return f'{self.user.username} - {self.following.username}'
+
+    def clean(self):
+        if self.user == self.following:
+            raise ValidationError('Нельзя подписываться на самого себя')

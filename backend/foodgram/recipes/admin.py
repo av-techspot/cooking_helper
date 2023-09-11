@@ -15,39 +15,67 @@ class IngredientResource(resources.ModelResource):
 class IngredientAdmin(ImportExportModelAdmin):
     """Ингредиенты в панели администратора"""
     resource_class = IngredientResource
-    list_display = ('name', 'measurement_unit',)
-    list_filter = ('name',)
+    list_display = ('pk', 'name', 'measurement_unit')
+    list_filter = ('name', )
+    search_fields = ('name', )
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Рецепты в панели администратора"""
-    list_display = ('name', 'author', 'favorites_number')
-    list_filter = ('author', 'name', 'tag')
+    list_display = (
+        'pk',
+        'name',
+        'author',
+        'text',
+        'cooking_time',
+        'in_favorites',
+        'image',
+    )
+    list_editable = (
+        'name',
+        'cooking_time',
+        'text',
+        'image',
+        'author',
+    )
+    filter_horizontal = ('tags',)
+    readonly_fields = ('in_favorites',)
+    list_filter = ('name', 'author', 'tags')
+    empty_value_display = '-пусто-'
 
-    def favorites_number(self, obj):
+    @admin.display(description='В избранном')
+    def in_favorites(self, obj):
         return obj.favorites.count()
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """Теги в панели администратора"""
-    pass
+    list_display = ('pk', 'name', 'color', 'slug')
+    list_editable = ('name', 'color', 'slug')
+    search_fields = ['name', 'slug']
+    empty_value_display = '-пусто-'
 
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     """Связанные ингредиенты-рецепты в панели администратора"""
-    pass
+    list_display = ('pk', 'recipe', 'ingredient', 'amount')
+    list_editable = ('recipe', 'ingredient', 'amount')
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     """Подписки в панели администратора"""
-    pass
+    list_display = ('pk', 'user', 'recipe')
+    list_editable = ('user', 'recipe')
+    search_fields = ['user__username', 'user__email']
 
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     """Список покупок в панели администратора"""
-    pass
+    list_display = ('pk', 'user', 'recipe')
+    list_editable = ('user', 'recipe')
+    search_fields = ['user__username', 'user__email']

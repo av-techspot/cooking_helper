@@ -1,5 +1,6 @@
 # isort: skip_file
 from django.http import HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -34,6 +35,7 @@ class TagViewset(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class IngredientViewset(viewsets.ModelViewSet):
@@ -43,13 +45,15 @@ class IngredientViewset(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (IngredientSearchFilter,)
     search_fields = ('^name',)
+    pagination_class = None
 
 
 class RecipeViewset(viewsets.ModelViewSet):
     """Вьюсет рецепта"""
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.all().distinct()
     serializer_class = CreateRecipeSerializer
     pagination_class = LimitPageNumberPagination
+    filter_backends = [DjangoFilterBackend]
     filter_class = AuthorAndTagFilter
     permission_classes = [IsOwnerOrReadOnly]
 
