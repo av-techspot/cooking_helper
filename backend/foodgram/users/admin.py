@@ -19,6 +19,7 @@ class AdminUser(admin.ModelAdmin):
         'last_name',
         'first_name',
     )
+    search_fields = ('email', 'username')
 
 
 @admin.register(Follow)
@@ -29,8 +30,12 @@ class AdminFollow(admin.ModelAdmin):
         'user',
         'following'
     )
-    list_editable = (
-        'user',
-        'following'
+    search_fields = (
+        'user__username',
+        'following__username'
     )
+#    list_editable = (
+#        'user',
+#        'following'
+#    )
     empty_value_display = '-пусто-'
