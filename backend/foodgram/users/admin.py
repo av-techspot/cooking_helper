@@ -34,8 +34,4 @@ class AdminFollow(admin.ModelAdmin):
         'user__username',
         'following__username'
     )
-#    list_editable = (
-#        'user',
-#        'following'
-#    )
     empty_value_display = '-пусто-'

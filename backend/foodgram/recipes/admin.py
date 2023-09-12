@@ -32,13 +32,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'in_favorites',
         'image',
     )
-#    list_editable = (
-#        'name',
-#        'cooking_time',
-#        'text',
-#        'image',
-#        'author',
-#    )
+
     search_fields = ('name', 'tags', 'author')
     filter_horizontal = ('tags',)
     readonly_fields = ('in_favorites',)
@@ -54,7 +48,6 @@ class RecipeAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     """Теги в панели администратора"""
     list_display = ('pk', 'name', 'color', 'slug')
-#    list_editable = ('name', 'color', 'slug')
     search_fields = ['name', 'slug']
     empty_value_display = '-пусто-'
 
@@ -64,14 +57,12 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
     """Связанные ингредиенты-рецепты в панели администратора"""
     list_display = ('pk', 'recipe', 'ingredient', 'amount')
     search_fields = ('ingredients__name', 'recipes__name')
-#    list_editable = ('recipe', 'ingredient', 'amount')
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     """Подписки в панели администратора"""
     list_display = ('pk', 'user', 'recipe')
-#    list_editable = ('user', 'recipe')
     search_fields = ['user__username', 'user__email']
 
 
@@ -79,5 +70,4 @@ class FavoriteAdmin(admin.ModelAdmin):
 class CartAdmin(admin.ModelAdmin):
     """Список покупок в панели администратора"""
     list_display = ('pk', 'user', 'recipe')
-#   list_editable = ('user', 'recipe')
     search_fields = ("user__username", "recipe__name")
