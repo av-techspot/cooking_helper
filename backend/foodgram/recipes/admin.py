@@ -33,7 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'image',
     )
 
-    search_fields = ('name', 'tags', 'author')
+    search_fields = ('name', 'author__username', 'tags__name',)
     filter_horizontal = ('tags',)
     readonly_fields = ('in_favorites',)
     list_filter = ('name', 'author', 'tags')
