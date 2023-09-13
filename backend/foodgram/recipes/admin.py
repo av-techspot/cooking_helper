@@ -56,7 +56,7 @@ class TagAdmin(admin.ModelAdmin):
 class RecipeIngredientAdmin(admin.ModelAdmin):
     """Связанные ингредиенты-рецепты в панели администратора"""
     list_display = ('pk', 'recipe', 'ingredient', 'amount')
-    search_fields = ('ingredients__name', 'recipes__name')
+    search_fields = ('ingredient__name', 'recipe__name')
 
 
 @admin.register(Favorite)
